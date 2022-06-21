@@ -14,60 +14,104 @@ class Satuan extends BaseController
 
     public function index(){
 
-        $noHalaman = $this->request->getVar('page_satuan') ? $this->request->getVar('page_satuan') : 1;
+        $tombolCari = $this->request->getPost('tombolsatuan');
+
+        if (isset($tombolCari)) {
+            $cari = $this->request->getPost('carisatuan');
+            session()->set('carisatuan', $cari);
+            redirect()->to('/satuan/index');
+        } else {
+            $cari = session()->get('carisatuan');
+        }
+
+        $dataSatuan = $cari ? $this->satuanModel->cariData($cari) : $this->satuanModel;
+
+        $noHalaman = $this->request->getVar('page_kategori') ? $this->request->getVar('page_kategori') : 1;
         $data = [
-            'title'=>'Satuan Produk Toko',
-            'satuanModel'=>$this->satuanModel->paginate('2','satuan'),
-            'pager'=>$this->satuanModel->pager,
-            'nohalaman'=>$noHalaman,
-            'validation'=>\Config\Services::validation(),
+            'title'=> 'Satuan Produk Toko',
+            'datasatuan' => $this->satuanModel->paginate(3,'satuan'),
+            'pager' => $this->satuanModel->pager,
+            'nohalaman' => $noHalaman,
+            'cari' => $cari
         ];
-        return view('toko/satuan/index',$data);
+        return view('toko/satuan/index', $data);
     }
 
-    public function save(){
-        if(!$this->validate([
-            'satnama'=>[
-                'rules'=>'required',
-                'errors'=>[
-                    'required'=> 'Nama satuan harus diisi.',
-                ]
-            ]
-        ])){
-            $validation =\Config\Services::validation();
-            return redirect()->back()->withInput();
+    function formTambah()
+    {
+        if ($this->request->isAJAX()) {
+            $msg = [
+                'data' => view('toko/satuan/modalformtambah')
+            ];
+
+            echo json_encode($msg);
+        } else {
+            exit('Maaf tidak ada halaman yang bisa ditampilkan');
         }
-
-        $this->satuanModel->save([
-            'satnama'=>$this->request->getVar('satnama'),
-        ]);
-
-        return redirect()->to('/satuan/index');
     }
 
-    public function delete($satid){
-        $this->satuanModel->delete($satid);
-        return redirect()->to('/satuan/index');
-    }
+    public function simpandata()
+    {
+        if ($this->request->isAJAX()) {
+            $namasatuan = $this->request->getVar('namasatuan');
 
-    public function update($satid){
-        if(!$this->validate([
-            'satnama'=>[
-                'rules'=>'required',
-                'errors'=>[
-                    'required'=> 'Nama satuan harus diisi.',
-                ]
-            ]
-        ])){
-            $validation =\Config\Services::validation();
-            return redirect()->back()->withInput();
+            $this->satuanModel->save([
+                'satnama' => $namasatuan
+            ]);
+
+            $msg = [
+                'sukses' => 'Kategori berhasil ditambahkan'
+            ];
+            echo json_encode($msg);
         }
+    }
 
-        $this->satuanModel->save([
-            'satid'=>$this->request->getVar('satid'),
-            'satnama'=>$this->request->getVar('satnama'),
-        ]);
+    function hapus(){
+        if ($this->request->isAJAX()) {
+            $idSatuan = $this->request->getVar('idsatuan');
 
-        return redirect()->to('/satuan/index');
+            $this->satuanModel->delete($idSatuan);
+
+            $msg = [
+                'sukses' => 'Kategori berhasil dihapus'
+            ];
+            echo json_encode($msg);
+        }
+    }
+
+    function formEdit()
+    {
+        if ($this->request->isAJAX()) {
+            $idSatuan =  $this->request->getVar('idsatuan');
+
+            $ambildatasatuan = $this->satuanModel->find($idSatuan);
+            $data = [
+                'idsatuan' => $idSatuan,
+                'namasatuan' => $ambildatasatuan['satnama']
+            ];
+
+            $msg = [
+                'data' => view('toko/satuan/modalformedit', $data)
+            ];
+            echo json_encode($msg);
+        }
+    }
+
+    function updatedata()
+    {
+        if ($this->request->isAJAX()) {
+            $idSatuan = $this->request->getVar('idsatuan');
+            $namaSatuan = $this->request->getVar('namasatuan');
+
+            $this->satuanModel->save([
+                'satid'=>$idSatuan,
+                'satnama' => $namaSatuan
+            ]);
+
+            $msg = [
+                'sukses' =>  'Data satuan berhasil diupdate'
+            ];
+            echo json_encode($msg);
+        }
     }
 }

@@ -10,4 +10,8 @@ class SatuanModel extends Model
     protected $primaryKey = 'satid';
 
     protected $allowedFields = ['satid', 'satnama'];
+    public function cariData($cari)
+    {
+        return $this->table('satuan')->like('satnama',$cari);
+    }
 }
