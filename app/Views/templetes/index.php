@@ -13,15 +13,13 @@
 
     <!-- Custom fonts for this template-->
     <link href="<?= base_url(); ?>/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-    <link rel="icon" type="image/png" href="<?= base_url(); ?>/img/logo-2.png" /> 
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <link rel="icon" type="image/png" href="<?= base_url(); ?>/img/logo-2.png" />
     <!-- Custom styles for this template-->
     <link href="<?= base_url(); ?>/css/sb-admin-2.min.css" rel="stylesheet">
     <script src="<?= base_url(); ?>/vendor/jquery/jquery.min.js"></script>
-    <link rel="stylesheet" href="<?= base_url('vendor/sweetalert2/sweetalert2.min.css'); ?>">
-    <script src="<?= base_url('vendor/sweetalert2/sweetalert2.all.min.js'); ?>"></script>
+    <link rel="stylesheet" href="<?= base_url('plugins/sweetalert2/sweetalert2.min.css'); ?>">
+    <script src="<?= base_url('plugins/sweetalert2/sweetalert2.all.min.js'); ?>"></script>
 </head>
 
 <body id="page-top">
@@ -72,8 +70,7 @@
     </a>
 
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -102,20 +99,20 @@
     <script src="<?= base_url(); ?>/js/sb-admin-2.min.js"></script>
 
     <script>
-        function previewImg(){
+        function previewImg() {
             const gambarBarangPreorder = document.querySelector('#gambar_barang');
             const gambarBarangPreorderLabel = document.querySelector('.custom-file-label');
             const imgPreview = document.querySelector('.img-preview');
-    
+
             gambarBarangPreorderLabel.textContent = gambar_barang.files[0].name;
-    
+
             const fileGambarBarang = new FileReader();
             fileGambarBarang.readAsDataURL(gambar_barang.files[0]);
-            fileGambarBarang.onload = function(e){
+            fileGambarBarang.onload = function(e) {
                 imgPreview.src = e.target.result;
             }
         }
-        $("#jumlah").keyup(function(){
+        $("#jumlah").keyup(function() {
             total = $("#jumlah").val() * $("#harga").val();
             $("#total_harga").val(total);
         })

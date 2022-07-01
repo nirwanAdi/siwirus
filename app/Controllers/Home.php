@@ -6,7 +6,7 @@ class Home extends BaseController
 {
     public function index()
     {
-        return view('auth/login',[ 'config' => config('auth') ]);
+        return view('auth/login', ['config' => config('auth')]);
     }
     public function register()
     {
@@ -14,6 +14,10 @@ class Home extends BaseController
     }
     public function user()
     {
-        return view('user/index');
+        if (in_groups('admin')) {
+            return view('admin/index');
+        } else {
+            return view('user/index');
+        }
     }
 }

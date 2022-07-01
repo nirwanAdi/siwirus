@@ -12,7 +12,8 @@ class Satuan extends BaseController
         $this->satuanModel = new SatuanModel();
     }
 
-    public function index(){
+    public function index()
+    {
 
         $tombolCari = $this->request->getPost('tombolsatuan');
 
@@ -26,10 +27,10 @@ class Satuan extends BaseController
 
         $dataSatuan = $cari ? $this->satuanModel->cariData($cari) : $this->satuanModel;
 
-        $noHalaman = $this->request->getVar('page_kategori') ? $this->request->getVar('page_kategori') : 1;
+        $noHalaman = $this->request->getVar('page_satuan') ? $this->request->getVar('page_satuan') : 1;
         $data = [
-            'title'=> 'Satuan Produk Toko',
-            'datasatuan' => $this->satuanModel->paginate(3,'satuan'),
+            'title' => 'Satuan Produk Toko',
+            'datasatuan' => $this->satuanModel->paginate(3, 'satuan'),
             'pager' => $this->satuanModel->pager,
             'nohalaman' => $noHalaman,
             'cari' => $cari
@@ -66,7 +67,8 @@ class Satuan extends BaseController
         }
     }
 
-    function hapus(){
+    function hapus()
+    {
         if ($this->request->isAJAX()) {
             $idSatuan = $this->request->getVar('idsatuan');
 
@@ -104,7 +106,7 @@ class Satuan extends BaseController
             $namaSatuan = $this->request->getVar('namasatuan');
 
             $this->satuanModel->save([
-                'satid'=>$idSatuan,
+                'satid' => $idSatuan,
                 'satnama' => $namaSatuan
             ]);
 
