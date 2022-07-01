@@ -1,122 +1,138 @@
 <?= $this->extend('templetes/index'); ?>
 <?= $this->section('page-content'); ?>
 <div class="container-fluid">
-    <h3 class="h3 mb-4 text-gray-800">Managaement Data Kategori</h3>
+    <h3 class="h3 mb-4 text-gray-800">Management Data Kategori</h3>
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-        <!-- Button trigger modal -->
             <div class="card-title ">
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-            <i class="fas fa-plus"></i>
-            <span>Tambah Data</span>
-            </button>
-
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Tambah Data Kategori</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form action="/kategori/save" method="post">
-                <div class="modal-body">
-                    <?= csrf_field(); ?>
-                        <div class="form-group row">
-                            <label for="katnama" class="col-sm-4 col-form-label">Nama Kategori</label>
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control <?= ($validation->hasError('nama_bank'))? 'is-invalid' : '' ; ?>" id="katnama" name="katnama" autofocus>
-                                <div class="invalid-feedback">
-                                <?= $validation->getError('katnama'); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Tambah Data</button>
-                    </div>
-                </form>
-                </div>
-            </div>
-            </div>
+                <button type="button" class="btn btn-sm btn-primary btn-icon-split tombolTambah">
+                    <span class="icon text-white-50"><i class="fas fa-plus"></i></span>
+                    <span class="text">Tambah Data</span>
+                </button>
             </div>
         </div>
         <div class="card-body">
-            <form action="/kategori/index" method="post">
+            <form method="POST" action="/kategori/index">
                 <?= csrf_field(); ?>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" placeholder="Cari Nama Kategori" name="cari_kategori" autofocus>
+                    <input type="text" class="form-control" placeholder="Cari Nama Kategori" name="carikategori" autofocus value="<?= $cari; ?>">
                     <div class="input-group-append">
-                        <button class="btn btn-primary" type="submit" name="tombol_kategori" id="button-addon2"><i class="fas fa-search"></i></button>
+                        <button class="btn btn-primary" type="submit" name="tombolkategori">Cari</button>
                     </div>
                 </div>
             </form>
-            <table class="table table-sm table-striped">
+            <table class="table table-hover">
                 <thead>
-                    <tr>
+                    <tr class="text-center">
                         <th>No</th>
                         <th>Nama Kategori</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php $nomor=1+(($nohalaman-1)*2) ?>
-                    <?php foreach($kategori as $kategoris) : ?>
+                    <?php $nomor = 1 + (($nohalaman - 1) * 3);
+                    foreach ($datakategori as $row) :
+                    ?>
                         <tr>
                             <td><?= $nomor++; ?></td>
-                            <td><?= $kategoris['katnama']; ?></td>
-                            <td>
-                                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#editKategori">
-                                <i class="fas fa-edit"></i>
+                            <td><?= $row['katnama']; ?></td>
+                            <td class="text-center">
+                                <button type="button" class="btn btn-danger btn-sm" title="Hapus Kategori" onclick="hapus('<?= $row['katid'] ?>','<?= $row['katnama'] ?>')">
+                                    <i class="fa fa-trash-alt"></i>
                                 </button>
-                                <div class="modal fade" id="editKategori" tabindex="-1" aria-labelledby="editKategoriLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="editKategoriLabel">Edit Data Kategori</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <form action="/kategori/update/<?= $kategoris['katid']; ?>" method="post">
-                                    <div class="modal-body">
-                                        <?= csrf_field(); ?>
-                                            <div class="form-group row">
-                                                <label for="katnama" class="col-sm-4 col-form-label">Nama Kategori</label>
-                                                <div class="col-sm-6">
-                                                    <input type="text" class="form-control <?= ($validation->hasError('katnama'))? 'is-invalid' : '' ; ?>" id="katnama" name="katnama" autofocus value="<?= (old('katnama')) ? old('katnama') : $kategoris['katnama']; ?>">
-                                                    <div class="invalid-feedback">
-                                                    <?= $validation->getError('katnama'); ?>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                                            <button type="submit" class="btn btn-primary">Ubah Data</button>
-                                        </div>
-                                    </form>
-                                    </div>
-                                </div>
-                                </div>
-                                <form action="/kategori/<?= $kategoris['katid']; ?>" method="post" class="d-inline">
-                                    <?= csrf_field(); ?>
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <button type="submit" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
-                                </form>
+                                <button type="button" class="btn btn-success btn-sm" title="Edit Kategori" onclick="edit('<?= $row['katid'] ?>')">
+                                    <i class="fa fa-pencil-alt"></i>
+                                </button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
-            <div class="float-center">
-                <?= $pager->links('kategori','paging_data'); ?>
+            <div class="d-flex justify-content-center">
+                <?= $pager->links('kategori', 'paging_data'); ?>
             </div>
         </div>
     </div>
 </div>
-<div class="viewmodal" style="display : none;"></div>
+<div class="viewmodal" style="display: none;"></div>
+<script>
+    function hapus(id, nama) {
+        Swal.fire({
+            title: 'Hapus Kategori',
+            html: `Yakin hapus nama kategori <strong>${nama}</strong> ?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Hapus !',
+            cancelButtonText: 'Tidak'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "post",
+                    url: "<?= site_url('kategori/hapus') ?>",
+                    data: {
+                        idkategori: id
+                    },
+                    dataType: "json",
+                    success: function(response) {
+                        if (response.sukses) {
+                            window.location.reload();
+                        }
+                    },
+                    error: function(xhr, thrownError) {
+                        alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                    }
+                });
+            }
+        })
+    }
+
+    function edit(id) {
+        $.ajax({
+            type: "post",
+            url: "<?= site_url('kategori/formEdit') ?>",
+            data: {
+                idkategori: id
+            },
+            dataType: "json",
+            success: function(response) {
+                if (response.data) {
+                    $('.viewmodal').html(response.data).show();
+                    $('#modalformedit').on('shown.bs.modal', function(event) {
+                        $('#namakategori').focus();
+                    });
+                    $('#modalformedit').modal('show');
+                }
+            },
+            error: function(xhr, thrownError) {
+                alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        $('.tombolTambah').click(function(e) {
+            e.preventDefault();
+
+            $.ajax({
+                url: "<?= site_url('kategori/formTambah') ?>",
+                dataType: "json",
+                type: 'post',
+                success: function(response) {
+                    if (response.data) {
+                        $('.viewmodal').html(response.data).show();
+                        $('#modaltambahkategori').on('shown.bs.modal', function(event) {
+                            $('#namakategori').focus();
+                        });
+                        $('#modaltambahkategori').modal('show');
+                    }
+                },
+                error: function(xhr, thrownError) {
+                    alert(xhr.status + "\n" + xhr.responseText + "\n" + thrownError);
+                }
+            });
+        });
+    });
+</script>
 <?= $this->endSection(); ?>

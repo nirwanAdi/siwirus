@@ -6,78 +6,108 @@ use App\Models\KategoriModel;
 
 class Kategori extends BaseController
 {
-    protected $kategori;
     public function __construct()
     {
         $this->kategori = new KategoriModel();
     }
+    public function index()
+    {
+        $tombolCari = $this->request->getPost('tombolkategori');
 
-    public function index(){
-        $tombol_cari = $this->request->getPost('tombol_kategori');
-        if(isset($tombol_cari)){
-            $cari = $this->request->getPost('cari_kategori');
-            session()->set('cari_kategori',$cari);
+        if (isset($tombolCari)) {
+            $cari = $this->request->getPost('carikategori');
+            session()->set('carikategori', $cari);
             redirect()->to('/kategori/index');
-        }
-        else{
-            $cari = session()->get('cari_kategori');
+        } else {
+            $cari = session()->get('carikategori');
         }
 
         $dataKategori = $cari ? $this->kategori->cariData($cari) : $this->kategori;
+
         $noHalaman = $this->request->getVar('page_kategori') ? $this->request->getVar('page_kategori') : 1;
         $data = [
-            'title'=>'Kategori Produk Toko',
-            'kategori'=>$dataKategori->paginate('2','kategori'),
-            'pager'=>$this->kategori->pager,
-            'nohalaman'=>$noHalaman,
-            'validation'=>\Config\Services::validation(),
+            'title'=> 'Kategori Produk Toko',
+            'datakategori' => $this->kategori->paginate(3,'kategori'),
+            'pager' => $this->kategori->pager,
+            'nohalaman' => $noHalaman,
+            'cari' => $cari
         ];
-        return view('toko/kategori/data',$data);
+        return view('toko/kategori/data', $data);
     }
+    function formTambah()
+    {
+        if ($this->request->isAJAX()) {
+            $msg = [
+                'data' => view('toko/kategori/modalformtambah')
+            ];
 
-    public function save(){
-        if(!$this->validate([
-            'katnama'=>[
-                'rules'=>'required',
-                'errors'=>[
-                    'required'=> 'Nama kategori harus diisi.',
-                ]
-            ]
-        ])){
-            $validation =\Config\Services::validation();
-            return redirect()->back()->withInput();
+            echo json_encode($msg);
+        } else {
+            exit('Maaf tidak ada halaman yang bisa ditampilkan');
         }
-
-        $this->kategori->save([
-            'katnama'=>$this->request->getVar('katnama'),
-        ]);
-
-        return redirect()->to('/kategori/index');
     }
 
-    public function delete($katid){
-        $this->kategori->delete($katid);
-        return redirect()->to('/kategori/index');
-    }
+    public function simpandata()
+    {
+        if ($this->request->isAJAX()) {
+            $namakategori = $this->request->getVar('namakategori');
 
-    public function update($katid){
-        if(!$this->validate([
-            'katnama'=>[
-                'rules'=>'required',
-                'errors'=>[
-                    'required'=> 'Nama kategori harus diisi.',
-                ]
-            ]
-        ])){
-            $validation =\Config\Services::validation();
-            return redirect()->back()->withInput();
+            $this->kategori->save([
+                'katnama' => $namakategori
+            ]);
+
+            $msg = [
+                'sukses' => 'Kategori berhasil ditambahkan'
+            ];
+            echo json_encode($msg);
         }
+    }
 
-        $this->kategori->save([
-            'katid'=>$this->request->getVar('katid'),
-            'katnama'=>$this->request->getVar('katnama'),
-        ]);
+    function hapus(){
+        if ($this->request->isAJAX()) {
+            $idKategori = $this->request->getVar('idkategori');
 
-        return redirect()->to('/kategori/index');
+            $this->kategori->delete($idKategori);
+
+            $msg = [
+                'sukses' => 'Kategori berhasil dihapus'
+            ];
+            echo json_encode($msg);
+        }
+    }
+
+    function formEdit()
+    {
+        if ($this->request->isAJAX()) {
+            $idKategori =  $this->request->getVar('idkategori');
+
+            $ambildatakategori = $this->kategori->find($idKategori);
+            $data = [
+                'idkategori' => $idKategori,
+                'namakategori' => $ambildatakategori['katnama']
+            ];
+
+            $msg = [
+                'data' => view('toko/kategori/modalformedit', $data)
+            ];
+            echo json_encode($msg);
+        }
+    }
+
+    function updatedata()
+    {
+        if ($this->request->isAJAX()) {
+            $idKategori = $this->request->getVar('idkategori');
+            $namaKategori = $this->request->getVar('namakategori');
+
+            $this->kategori->update($idKategori, [
+                'katnama' => $namaKategori
+            ]);
+
+            $msg = [
+                'sukses' =>  'Data kategori berhasil diupdate'
+            ];
+            echo json_encode($msg);
+        }
     }
 }
