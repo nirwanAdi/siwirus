@@ -59,6 +59,9 @@ class TransaksiPreOrder extends BaseController
             'id' => $id,
             'status' => 2
         ]);
+        $transaksi = $this->transaksiModel->where('id', $id)->get()->getResultArray()[0];
+        $barang = $this->barangPreorderModel->where('id', $transaksi['id_barang'])->get()->getResultArray()[0];
+        $this->barangPreorderModel->update($barang['id'], ['jumlah' => ((int)$barang['jumlah'] + (int)$transaksi['jumlah'])]);
         return redirect()->back();
     }
     public function tolak($id)
