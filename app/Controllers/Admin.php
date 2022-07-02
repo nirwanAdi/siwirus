@@ -5,7 +5,10 @@ namespace App\Controllers;
 use \Myth\Auth\Models\UserModel;
 use \Myth\Auth\Authorization\GroupModel;
 use App\Models\DataPengurusModel;
+use App\Models\JadwalJagaToko;
+use CodeIgniter\HTTP\Request;
 use Config\Services;
+use Exception;
 
 class Admin extends BaseController
 {
@@ -187,6 +190,64 @@ class Admin extends BaseController
 
                 echo json_encode($msg);
             }
+        }
+    }
+
+    public function jadwalJagaToko()
+    {
+        $model = new UserModel();
+        $data['title'] = "Jadwal Jaga Toko";
+        $data['jadwal'] = $model->join('jadwal_jaga_toko', 'jadwal_jaga_toko.user_id = users.id')
+                                ->get()->getResultArray() ?? [];
+        $data['users'] = $model->get()->getResultArray() ?? [];
+        
+        return view('admin/jadwalJagaToko', $data);
+    }
+
+    public function tambahJadwalJaga()
+    {
+        $user_id = $this->request->getVar('user_id');
+        $hari = $this->request->getVar('hari');
+        $sesi = $this->request->getVar('sesi');
+
+        $model = new UserModel();
+        $user = $model->where('id', $user_id)->get()->getResultArray() ?? [];
+
+        if (empty($user)) {
+            return json_encode([
+                'status' => 'gagal',
+                'type' => 'user_id',
+            ]);
+        }
+        
+        try {
+            $jadwal = new JadwalJagaToko();
+
+            $j = $jadwal->where('user_id', $user_id)
+                        ->where('hari', $hari)
+                        ->where('sesi', $sesi)
+                        ->get()->getResultArray();
+            if (!empty($j)) {
+                return json_encode([
+                    'status' => 'gagal',
+                    'type' => 'hari',
+                ]);
+            }
+
+            $jadwal->insert([
+                'user_id' => $user_id,
+                'hari' => $hari,
+                'sesi' => $sesi,
+            ]);
+
+            return json_encode([
+                'status' => 'berhasil',
+            ]);
+        } catch (Exception $e) {
+            return json_encode([
+                'status' => 'gagal',
+                'type' => 'error',
+            ]);
         }
     }
 }

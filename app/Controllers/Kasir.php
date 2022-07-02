@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use CodeIgniter\I18n\Time;
 use App\Models\DataProdukModel;
+use App\Models\JadwalJagaToko;
 use Config\Services;
 
 class Kasir extends BaseController
@@ -17,6 +18,28 @@ class Kasir extends BaseController
     }
     public function input()
     {
+        $model = new JadwalJagaToko();
+        $jam = (string)date('G');
+        $sesi = '4';
+
+        if ($jam >= '7' && $jam < '10') {
+            $sesi = '1';
+        } elseif ($jam >= '10' && $jam < '13') {
+            $sesi = '2';
+        } elseif ($jam >= '13' && $jam < '16') {
+            $sesi = '3';
+        }
+
+        $jadwal = $model->where('user_id', session('logged_in'))
+                        ->where('hari', date('Y-m-d'))
+                        ->where('sesi', $sesi)
+                        ->get()->getResultArray();
+        
+        if (empty($jadwal)) {
+            session()->setFlashdata('msg', '<script>Swal.fire({text: "Maaf, saat ini kamu tidak memiliki jadwal jaga toko!", icon: "error"})</script>');
+            return redirect()->back();
+        }
+        
         $data = [
             'nofaktur' => $this->buatFaktur(),
             'title' => 'Input Kasir',
