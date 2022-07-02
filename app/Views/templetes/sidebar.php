@@ -27,6 +27,11 @@
                 <i class="fas fa-fw fa-users"></i>
                 <span>Pengurus UKM</span></a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<?= base_url('admin/jadwalJagaToko'); ?>">
+                <i class="fas fa-fw fa-users"></i>
+                <span>Jadwal Jaga Toko</span></a>
+        </li>
 
 
         <!-- Divider -->
@@ -67,7 +72,7 @@
             </div>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="<?= base_url('kasir/index'); ?>">
+            <a class="nav-link" href="<?= base_url('kasir/input'); ?>">
                 <i class="fas fa-fw fa-cash-register"></i>
                 <span>Kasir</span></a>
         </li>

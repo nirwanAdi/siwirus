@@ -20,6 +20,9 @@
     <script src="<?= base_url(); ?>/vendor/jquery/jquery.min.js"></script>
     <link rel="stylesheet" href="<?= base_url('plugins/sweetalert2/sweetalert2.min.css'); ?>">
     <script src="<?= base_url('plugins/sweetalert2/sweetalert2.all.min.js'); ?>"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
 </head>
 
 <body id="page-top">
@@ -119,7 +122,7 @@
     </script>
     <!-- buat script -->
     <?= $this->renderSection('script'); ?>
-
+    <?= session()->has('msg') ? session()->getFlashdata('msg') : "" ?>
 </body>
 
 </html>
