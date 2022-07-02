@@ -67,6 +67,7 @@
                     <a class="collapse-item" href="<?= base_url('produk/index'); ?>">Barang</a>
                     <a class="collapse-item" href="<?= base_url('kategori/index'); ?>">Kategori</a>
                     <a class="collapse-item" href="<?= base_url('satuan/index'); ?>">Satuan</a>
+                    <a class="collapse-item" href="<?= base_url('jagatoko/index'); ?>">Jadwal Jaga Toko</a>
                 </div>
             </div>
         </li>

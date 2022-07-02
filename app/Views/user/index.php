@@ -36,8 +36,8 @@
     <?php else : ?>
         <h1 class="h3 mb-4 text-gray-800">User Profile</h1>
 
-        <div class="row">
-            <div class="col-lg-12" style="height:100px ;">
+        <div class="row" style="height : 100px ;">
+            <div class="col-lg-12">
                 <div class="card mb-3">
                     <div class="row no-gutters">
                         <div class="col-sm-4 p-2">

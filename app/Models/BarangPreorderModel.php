@@ -8,13 +8,14 @@ class BarangPreOrderModel extends Model
 {
     protected $table = 'barang_preorder';
     protected $useTimestamps = true;
-    protected $allowedFields = ['nama_barang','harga','gambar_barang'];
+    protected $allowedFields = ['nama_barang', 'harga', 'gambar_barang', 'jumlah'];
 
-    public function getPreorder($id=false){
-        if($id==false){
+    public function getPreorder($id = false)
+    {
+        if ($id == false) {
             return $this->findAll();
         }
 
-        return $this->where(['id'=>$id])->first();
+        return $this->where(['id' => $id])->first();
     }
 }

@@ -5,7 +5,7 @@
     <div class="card card-default color-palette-box">
         <div class="card-header">
             <h3 class="card-title">
-                <button type="button" class="btn btn-warning btn-sm" onclick="window.location='<?= site_url('penjualan/index') ?>'">&laquo; Kembali</button>
+                <button type="button" class="btn btn-warning btn-sm" onclick="window.location='<?= site_url('kasir/index') ?>'">&laquo; Kembali</button>
             </h3>
         </div>
         <div class="card-body">
