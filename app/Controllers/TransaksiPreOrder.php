@@ -20,57 +20,62 @@ class TransaksiPreOrder extends BaseController
     }
 
     public function index()
-    {   
+    {
         $this->db      = \Config\Database::connect();
         $this->builder = $this->db->table('transaksi_preorder');
-        $this->builder->select('transaksi_preorder.id as transaksiid,id_pembeli,id_barang,id_metode_pembayaran,jumlah,total_harga,transaksi_preorder.status as statustransaksi,nama_barang,harga,gambar_barang,nama_bank,no_rekening,username');
+        $this->builder->select('transaksi_preorder.id as transaksiid,id_pembeli,id_barang,id_metode_pembayaran,transaksi_preorder.jumlah as transaksi_jumlah,total_harga,transaksi_preorder.status as statustransaksi,nama_barang,harga,gambar_barang,nama_bank,no_rekening,username');
         $this->builder->join('barang_preorder', 'barang_preorder.id = transaksi_preorder.id_barang');
         $this->builder->join('metode_pembayaran', 'metode_pembayaran.id = transaksi_preorder.id_metode_pembayaran');
         $this->builder->join('users', 'users.id = transaksi_preorder.id_pembeli');
+        $this->builder->orderBy('statustransaksi', 'ASC');
         $query = $this->builder->get();
         $data = [
-            'title'=>'Transaksi Pre Order',
+            'title' => 'Transaksi Pre Order',
             'transaksi_preorder' => $query->getResult()
         ];
-        return view('preorder/transaksi-pre-order/index',$data,);
+        return view('preorder/transaksi-pre-order/index', $data,);
     }
 
-    public function detail($id){
+    public function detail($id)
+    {
         $this->db      = \Config\Database::connect();
         $this->builder = $this->db->table('transaksi_preorder');
-        $this->builder->select('transaksi_preorder.id as transaksiid,id_pembeli,id_barang,id_metode_pembayaran,jumlah,total_harga,transaksi_preorder.status as statustransaksi,gambar_bukti_pembayaran,nama_barang,harga,gambar_barang,nama_bank,no_rekening,username');
+        $this->builder->select('transaksi_preorder.id as transaksiid,id_pembeli,id_barang,id_metode_pembayaran,transaksi_preorder.jumlah as transaksi_jumlah,total_harga,transaksi_preorder.status as statustransaksi,gambar_bukti_pembayaran,nama_barang,harga,gambar_barang,nama_bank,no_rekening,username,keterangan,kelas,nomor_hp,nama_pemilik');
         $this->builder->join('barang_preorder', 'barang_preorder.id = transaksi_preorder.id_barang');
         $this->builder->join('metode_pembayaran', 'metode_pembayaran.id = transaksi_preorder.id_metode_pembayaran');
         $this->builder->join('users', 'users.id = transaksi_preorder.id_pembeli');
-        $this->builder->where('transaksi_preorder.id',$id);
+        $this->builder->where('transaksi_preorder.id', $id);
         $query = $this->builder->get();
         $data = [
-            'title'=>'Transaksi Pre Order',
+            'title' => 'Transaksi Pre Order',
             'transaksi_preorder' => $query->getRow()
         ];
-        return view('preorder/transaksi-pre-order/detail',$data,);
+        return view('preorder/transaksi-pre-order/detail', $data,);
     }
 
-    public function konfirmasi($id){
+    public function konfirmasi($id)
+    {
         $this->transaksiModel->save([
-            'id'=>$id,
-            'status'=>2
+            'id' => $id,
+            'status' => 2
         ]);
         return redirect()->back();
     }
-    public function tolak($id){
+    public function tolak($id)
+    {
         $this->transaksiModel->save([
-            'id'=>$id,
-            'status'=>3
+            'id' => $id,
+            'status' => 3
         ]);
         return redirect()->back();
     }
-    public function delete($id){
+    public function delete($id)
+    {
         /* cari gambar berdasarkan id */
         $transaksiPreorder = $this->transaksiModel->find($id);
 
         // ngecek gambar
-        if(!empty($transaksiPreorder['gambar_bukti_pembayaran'])){
+        if (!empty($transaksiPreorder['gambar_bukti_pembayaran'])) {
             // hapus gambar
             unlink('img/pre_order/bukti_pembayaran/' . $transaksiPreorder['gambar_bukti_pembayaran']);
         }

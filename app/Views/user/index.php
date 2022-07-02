@@ -36,12 +36,12 @@
     <?php else : ?>
         <h1 class="h3 mb-4 text-gray-800">User Profile</h1>
 
-        <div class="row">
-            <div class="col-lg-12" style="height:100px ;">
+        <div class="row" style="height : 100px ;">
+            <div class="col-lg-12">
                 <div class="card mb-3">
                     <div class="row no-gutters">
                         <div class="col-sm-4">
-                            <img src="<?= base_url('/img/' . user()->user_image); ?>" class="card-img" alt="<?= user()->username; ?>" style="width : 100px; height : 100px">
+                            <img src="<?= base_url('/img/' . user()->user_image); ?>" class="card-img img-thumbnail" alt="<?= user()->username; ?>">
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
